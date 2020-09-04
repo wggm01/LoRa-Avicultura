@@ -1,7 +1,7 @@
 import paho.mqtt.client as mqtt
 broker_addr = "jiclora.duckdns.org"
 port = 8883
-capath = r'etc/ssl/certs'
+capath = r'/etc/ssl/certs'
 #capath = r'C:\Users\wggm\OneDrive\Contribuciones\JIC2020\certs'
 client = mqtt.Client("legiony7")
 client.username_pw_set(username="pi",password="raspberry")
