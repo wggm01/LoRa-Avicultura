@@ -6,6 +6,11 @@
 #include "Adafruit_BME680.h"
 //Librerias
 
+//GPS UBICACION
+double latitude = 9.045448;
+double longitude = -79.406670;
+//GPS UBICACION
+
 //programador de obtencion de data
 const long interval = 5000;
 unsigned long prev;
@@ -213,11 +218,11 @@ void loop() {
     return;
     }
     else{
-    String frame = String(echo_duration1/58) + "," + String(echo_duration2/58)+ "," +String(bme.temperature)+ "," +String(bme.humidity)+ "," +String(bme.pressure / 100)+ "," +String(bme.gas_resistance / 1000.0);
-    //Serial.println(frame);
-    LoRa.beginPacket();
-    LoRa.print(frame);
-    LoRa.endPacket();
+    String frame = String(latitude,6)+ "," +String(longitude,6)+ "," +String(echo_duration1/58) + "," + String(echo_duration2/58)+ "," +String(bme.temperature)+ "," +String(bme.humidity)+ "," +String(bme.pressure / 100)+ "," +String(bme.gas_resistance / 1000.0);
+    Serial.println(frame);
+    //LoRa.beginPacket();
+    //LoRa.print(frame);
+    //LoRa.endPacket();
     }
     }
  
