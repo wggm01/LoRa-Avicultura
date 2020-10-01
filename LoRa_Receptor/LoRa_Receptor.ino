@@ -48,11 +48,15 @@ void cbk(int packetSize) {
   for (int i = 0; i < packetSize; i++) { packet += (char) LoRa.read();}
   //Serial.print("Byte decodificado:");Serial.println(packet);}
   //Figuras de Merito
+  Serial.println(packet);
   snr="SNR:"+String(LoRa.packetSnr(),DEC);
   rssi="RSSI:"+String(LoRa.packetRssi(),DEC);
-  LoRaData();
+ // LoRaData();
   
   //Envio de data al broker
+  String timedate =ctime(&now);
+  timedate.replace("\n", "");
+  packet = timedate + ","+ packet; 
   int trama_len = packet.length() + 1;
   char trama_buff[trama_len];
   packet.toCharArray(trama_buff,trama_len);
@@ -155,7 +159,6 @@ void loop() {
       client.loop();
     }}
   //INICIALIZACION WIFI, MQTT BLA BLA
-  
   //Recepcion de data
   int packetSize = LoRa.parsePacket();
   if (packetSize){

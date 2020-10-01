@@ -11,6 +11,10 @@ double latitude = 9.045448;
 double longitude = -79.406670;
 //GPS UBICACION
 
+//NOMBRE DEL CORRAL
+String nombre_corral = "Casa D40";
+//NOMBRE DEL CORRAL
+
 //programador de obtencion de data
 const long interval = 5000;
 unsigned long prev;
@@ -218,7 +222,7 @@ void loop() {
     return;
     }
     else{
-    String frame = String(latitude,6)+ "," +String(longitude,6)+ "," +String(echo_duration1/58) + "," + String(echo_duration2/58)+ "," +String(bme.temperature)+ "," +String(bme.humidity)+ "," +String(bme.pressure / 100)+ "," +String(bme.gas_resistance / 1000.0);
+    String frame = String(latitude,6)+ "," +String(longitude,6)+ "," +nombre_corral+ "," +String(echo_duration1/58) + "," + String(echo_duration2/58)+ "," +String(bme.temperature)+ "," +String(bme.humidity)+ "," +String(bme.pressure / 100)+ "," +String(bme.gas_resistance / 1000.0);
     //Serial.println(frame);
     LoRa.beginPacket();
     LoRa.print(frame);
