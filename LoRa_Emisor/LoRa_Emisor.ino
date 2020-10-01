@@ -16,7 +16,7 @@ String nombre_corral = "Casa D40";
 //NOMBRE DEL CORRAL
 
 //programador de obtencion de data
-const long interval = 5000;
+const long interval = 60000;
 unsigned long prev;
 //programador de obtencion de data
 //BME680
