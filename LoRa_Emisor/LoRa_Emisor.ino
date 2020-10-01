@@ -219,10 +219,10 @@ void loop() {
     }
     else{
     String frame = String(latitude,6)+ "," +String(longitude,6)+ "," +String(echo_duration1/58) + "," + String(echo_duration2/58)+ "," +String(bme.temperature)+ "," +String(bme.humidity)+ "," +String(bme.pressure / 100)+ "," +String(bme.gas_resistance / 1000.0);
-    Serial.println(frame);
-    //LoRa.beginPacket();
-    //LoRa.print(frame);
-    //LoRa.endPacket();
+    //Serial.println(frame);
+    LoRa.beginPacket();
+    LoRa.print(frame);
+    LoRa.endPacket();
     }
     }
  
