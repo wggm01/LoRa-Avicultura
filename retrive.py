@@ -7,7 +7,7 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 
-capath = r'DST_Root_CA_X3.pem' #certificado root ssl
+capath = r'/etc/ssl/certs/DST_Root_CA_X3.pem' #certificado root ssl
 json_file = r'avicultura-lora-firebase-adminsdk-w9yh3-a0e6634d82.json' #private key
 #credenciales de firebase
 cred = credentials.Certificate(json_file)
@@ -29,9 +29,9 @@ def on_message(client,userdata,message):
       #subir data a base de datos
       doc_ref.set({
           u'fecha_hora': payload[0],
-          u'ubicacion': [payload[8],payload[9]], #futuro
-          u'nombre_corral': payload[7],
-          u'medidas': [float(payload[1]),float(payload[2]),float(payload[3]),float(payload[4]),float(payload[5]),float(payload[6])]
+          u'ubicacion': [payload[1],payload[2]], #futuro
+          u'nombre_corral': payload[3],
+          u'medidas': [float(payload[4]),float(payload[5]),float(payload[6]),float(payload[7]),float(payload[8]),float(payload[9])]
       })
 
 def main():
