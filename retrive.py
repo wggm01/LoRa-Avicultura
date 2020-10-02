@@ -8,22 +8,22 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 
 capath = r'/etc/ssl/certs/DST_Root_CA_X3.pem' #certificado root ssl
-json_file = r'avicultura-lora-firebase-adminsdk-w9yh3-a0e6634d82.json' #private key
+json_file = r'/home/pi/googlekeys/avicultura-lora-firebase-adminsdk-w9yh3-a0e6634d82.json' #private key
 #credenciales de firebase
 cred = credentials.Certificate(json_file)
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 def on_connect(client,userdata,flags, rc):
-        print('connected(%s)' % client._client_id)
+       # print('connected(%s)' % client._client_id)
         client.subscribe("nodos/+/medidas")
 
 def on_message(client,userdata,message):
       payload=message.payload.decode().split(',') #obtner payload
       provincia=message.topic
       provincia = re.findall("/([a-zA-Z]+)/",provincia) #obtener provincia
-      print(provincia[0])
-      print(payload)
+     # print(provincia[0])
+     # print(payload)
       #crear referencia a collection
       doc_ref = db.collection(u'nodos').document(str(provincia[0])) #referencia a la coleccion
       #subir data a base de datos
