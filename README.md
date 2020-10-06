@@ -25,6 +25,6 @@ Design and implement a poultry farm monitoring system capable of obtaining param
 ##### Config Files
 * [Click Here](./configs)
 ##### Network Topology
-* [Network Topology](./images/network-topology.png)
+* [Network Topology](./images/Lora Avicultura.jpeg)
 
 
