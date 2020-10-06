@@ -29,7 +29,7 @@ def on_message(client,userdata,message):
       #subir data a base de datos
       doc_ref.set({
           u'fecha_hora': payload[0],
-          u'ubicacion': [payload[1],payload[2]], #futuro
+          u'ubicacion': [float(payload[1]),float(payload[2])], #futuro
           u'nombre_corral': payload[3],
           u'medidas': [float(payload[4]),float(payload[5]),float(payload[6]),float(payload[7]),float(payload[8]),float(payload[9])]
       })
