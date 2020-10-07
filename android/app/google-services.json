@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "267056910461",
+    "firebase_url": "https://avicultura-lora.firebaseio.com",
+    "project_id": "avicultura-lora",
+    "storage_bucket": "avicultura-lora.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:267056910461:android:69cb00d6da6f7bbb49a114",
+        "android_client_info": {
+          "package_name": "jiclora.duckdns.lora_avicultura"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "267056910461-n3es0nbg7p3fru5hgh69fbme67il9fvn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAIkpveiMDtXXX20wAsvstGjbuypYhuzDU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "267056910461-n3es0nbg7p3fru5hgh69fbme67il9fvn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
