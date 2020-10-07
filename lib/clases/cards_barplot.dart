@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fl_chart/fl_chart.dart';
+
 class CardBarplot extends StatelessWidget {
 
   final DocumentSnapshot snapshot;
@@ -24,7 +25,7 @@ class CardBarplot extends StatelessWidget {
         margin: EdgeInsets.fromLTRB(adjMargin, 16.0,adjMargin , 0.0),
       elevation: 1,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-      //color: const Color(0xffffffff),
+      color: const Color(0xffffffff),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -77,17 +78,17 @@ class CardBarplot extends StatelessWidget {
                     getTitles: (double value) {
                       switch (value.toInt()) {
                         case 0:
-                          return 'Agua[L]';
+                          return 'Agua L';
                         case 1:
-                          return 'Comida[g]';
+                          return 'Comida g';
                         case 2:
-                          return 'Temp[°C]';
+                          return 'Temp°C';
                         case 3:
-                          return 'Humedad[%]';
+                          return 'Humed% ';
                         case 4:
-                          return 'Presión[pa]';
+                          return 'Presión hpa';
                         case 5:
-                          return 'Gas[mol]';
+                          return 'IAQ';
                         default:
                           return '';
                       }

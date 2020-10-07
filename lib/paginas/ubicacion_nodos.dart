@@ -8,10 +8,7 @@ class NodosMap extends StatefulWidget {
   _NodosMapState createState() => _NodosMapState();
 }
 
-
 class _NodosMapState extends State<NodosMap> {
-
-
 
   GoogleMapController _controller;
   BitmapDescriptor _markerIcon;
@@ -21,7 +18,6 @@ class _NodosMapState extends State<NodosMap> {
       target: LatLng(8.426252, -81.059752),
       zoom: 6.9
   );
-
 
   void initMarker(documento, documentoid) async{
     _markerIcon = await BitmapDescriptor.fromAssetImage(ImageConfiguration(), 'assets/location.png');
@@ -73,8 +69,6 @@ class _NodosMapState extends State<NodosMap> {
     getMarkerData();
   }
 
-
-
   Widget build(BuildContext context) {
     return Stack(
       children: [
@@ -97,7 +91,6 @@ class _NodosMapState extends State<NodosMap> {
         )
       ],
     );
-
 
    }
 }

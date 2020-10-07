@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:connectivity/connectivity.dart';
 
@@ -21,16 +19,14 @@ class _LoadingState extends State<Loading> {
       setState(() {
         connflag = false;
       });
-      await Firebase.initializeApp();
-      await FirebaseFirestore.instance.collection('nodos').get();
+
       Navigator.pushNamed(context, '/home');
     } else if (connectivityResult == ConnectivityResult.wifi) {
       // I am connected to a wifi network.
       setState(() {
         connflag = false;
       });
-      await Firebase.initializeApp();
-      await FirebaseFirestore.instance.collection('nodos').get();
+
       Navigator.pushNamed(context, '/home');
     }
     else{
@@ -74,7 +70,7 @@ class _LoadingState extends State<Loading> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              child: Text('Error de conexión: Compruebe su conexión WiFi o Mobile',
+              child: Text('Error de conexión: Compruebe su conexión WiFi o Movil',
                   style: headLabel,
                 textAlign: TextAlign.center,
               ),
@@ -94,7 +90,9 @@ class _LoadingState extends State<Loading> {
         );
     }
     else{
-      return Container();
+      return Container(
+        color: Colors.blue,
+      );
     }
   }
 

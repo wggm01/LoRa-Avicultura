@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class CardSensor extends StatelessWidget {
+class CardSensor extends StatefulWidget {
 
   static const TextStyle sensorLabel = TextStyle(
       fontSize: 20.0,
@@ -19,8 +20,44 @@ class CardSensor extends StatelessWidget {
 
   final DocumentSnapshot snapshot;
   CardSensor(this.snapshot);
+
+  @override
+  _CardSensorState createState() => _CardSensorState();
+}
+
+//todo 1. ajustar data de alert dialog con los campos correspondientes
+
+class _CardSensorState extends State<CardSensor> {
   Map<String, dynamic> get documento {
-    return snapshot.data();
+    return widget.snapshot.data();
+  }
+
+  ShDialog(BuildContext context) {
+    return showDialog(context: context, builder: (context) {
+      return AlertDialog(
+        title: Text('Valores por mes:'),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: [
+              Text('Agua consumida:'),
+              Text('Alimento consumido: '),
+              Text('Temperatura promedio:'),
+              Text('Humedad promedio:'),
+              Text('Presión promedio:'),
+              Text('IAQ promedio:'),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            child: Text('Salir'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          )
+        ],
+      );
+    });
   }
 
   @override
@@ -37,9 +74,24 @@ class CardSensor extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Container(
-            child: Text(
-              documento['nombre_corral'],
-              style: headLabel,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  documento['nombre_corral'],
+                  style: CardSensor.headLabel,
+                ),
+                IconButton(
+                  splashRadius: 25.0,
+                  padding: EdgeInsets.all(0),
+                  color: Colors.red,
+                  highlightColor: Colors.pink,
+                  icon: Icon(Icons.more_vert_sharp),
+                    onPressed: (){
+                      ShDialog(context);
+                })
+              ],
             ),
             padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
             //color: Colors.greenAccent,
@@ -57,11 +109,11 @@ class CardSensor extends StatelessWidget {
                   children: [
                     Text(
                       documento['medidas'][0].toString() + 'L',
-                      style: valueLabel,
+                      style: CardSensor.valueLabel,
                     ),
                     Text(
                       'Agua',
-                      style: sensorLabel,
+                      style: CardSensor.sensorLabel,
                     ),
                   ],
                 ),
@@ -72,11 +124,11 @@ class CardSensor extends StatelessWidget {
                   children: [
                     Text(
                       documento['medidas'][1].toString()+ 'g',
-                      style: valueLabel,
+                      style: CardSensor.valueLabel,
                     ),
                     Text(
                       'Alimento',
-                      style: sensorLabel,
+                      style: CardSensor.sensorLabel,
                     ),
                   ],
                 ),
@@ -87,11 +139,11 @@ class CardSensor extends StatelessWidget {
                   children: [
                     Text(
                       documento['medidas'][2].toString()+ '°C',
-                      style: valueLabel,
+                      style: CardSensor.valueLabel,
                     ),
                     Text(
                       'Temperatura',
-                      style: sensorLabel,
+                      style: CardSensor.sensorLabel,
                     ),
                   ],
                 ),
@@ -113,11 +165,11 @@ class CardSensor extends StatelessWidget {
                   children: [
                     Text(
                       documento['medidas'][3].toString()+ '%',
-                      style: valueLabel,
+                      style: CardSensor.valueLabel,
                     ),
                     Text(
                       'Humedad',
-                      style: sensorLabel,
+                      style: CardSensor.sensorLabel,
                     ),
                   ],
                 ),
@@ -127,12 +179,12 @@ class CardSensor extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(
-                      documento['medidas'][4].toString()+ 'bar',
-                      style: valueLabel,
+                      documento['medidas'][4].toString()+ 'hpa',
+                      style: CardSensor.valueLabel,
                     ),
                     Text(
                       'Presión',
-                      style: sensorLabel,
+                      style: CardSensor.sensorLabel,
                     ),
                   ],
                 ),
@@ -142,12 +194,12 @@ class CardSensor extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(
-                      documento['medidas'][5].toString()+ 'mol',
-                      style: valueLabel,
+                      documento['medidas'][5].toString(),
+                      style: CardSensor.valueLabel,
                     ),
                     Text(
-                      'Gas',
-                      style: sensorLabel,
+                      'IAQ',
+                      style: CardSensor.sensorLabel,
                     ),
                   ],
                 ),
@@ -159,7 +211,7 @@ class CardSensor extends StatelessWidget {
             height: 20.0,
           ),
           Container(
-            child: Text(documento['fecha_hora'],style: headLabel,),
+            child: Text(documento['fecha_hora'],style: CardSensor.headLabel,),
             padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
 
             //color: Colors.cyanAccent,
@@ -169,3 +221,6 @@ class CardSensor extends StatelessWidget {
     );
   }
 }
+/*
+
+ */

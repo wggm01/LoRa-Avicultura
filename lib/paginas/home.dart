@@ -20,7 +20,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Dashboard Avicultura') ,
+        title: Text('LoRa Farm') ,
         centerTitle: true,
         elevation: 1.0,
       ),
