@@ -15,6 +15,7 @@ todo 2. agregar dialog box a vista resumida para ver los valores por mes.
 void main() {
   runApp(
       MaterialApp(
+        debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: {
         '/':(context) => Loading(),

@@ -4,18 +4,27 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class NodosMap extends StatefulWidget {
-
-
   @override
   _NodosMapState createState() => _NodosMapState();
 }
 
+
 class _NodosMapState extends State<NodosMap> {
-  //--todo 1.Cambiar icono de marcador
-  GoogleMapController controller;
+
+
+
+  GoogleMapController _controller;
+  BitmapDescriptor _markerIcon;
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
 
-  void initMarker(documento, documentoid){
+  final CameraPosition _homeposition = CameraPosition(
+      target: LatLng(8.426252, -81.059752),
+      zoom: 6.9
+  );
+
+
+  void initMarker(documento, documentoid) async{
+    _markerIcon = await BitmapDescriptor.fromAssetImage(ImageConfiguration(), 'assets/location.png');
     var markerIdVal = documentoid;
     final MarkerId markerId = MarkerId(markerIdVal);
 
@@ -23,7 +32,8 @@ class _NodosMapState extends State<NodosMap> {
       markerId: markerId,
       position:
       LatLng(documento['ubicacion'].latitude, documento['ubicacion'].longitude),
-      infoWindow: InfoWindow(title: 'Granja', snippet: documento['nombre_corral']),
+       infoWindow: InfoWindow(title: 'Granja', snippet: documento['nombre_corral']),
+      icon: _markerIcon
     );
     setState(() {
       markers[markerId] = marker;
@@ -43,10 +53,24 @@ class _NodosMapState extends State<NodosMap> {
     });
   }
 
+  void mapCreated(controller) {
+    setState(() {
+      _controller = controller;
+    });
+  }
+
+  shAll (){
+    _controller.moveCamera(
+        CameraUpdate.newCameraPosition(
+            CameraPosition(target: LatLng(8.426252, -81.059752),zoom: 6.9)
+        )
+    );
+  }
+
   @override
   void initState() {
-    getMarkerData();
     super.initState();
+    getMarkerData();
   }
 
 
@@ -55,26 +79,27 @@ class _NodosMapState extends State<NodosMap> {
     return Stack(
       children: [
         GoogleMap(
-            markers: Set<Marker>.of(markers.values),
+               markers: Set<Marker>.of(markers.values),
             mapType: MapType.normal,
-            initialCameraPosition:
-            CameraPosition(target: LatLng(8.426252, -81.059752), zoom: 6.9),
-            onMapCreated: (GoogleMapController controller) {
-              controller = controller;
-            }
+            initialCameraPosition:_homeposition,
+            onMapCreated: mapCreated,
         ),
         Container(
-          alignment: Alignment.bottomCenter,
-          child: Text('Ubicación de los nodos y gateway'),
+          child:
+              RaisedButton(
+                child: Text('Mostrar todos'),
+                 onPressed: () {
+                   setState(() {
+                       shAll();
+                   });
+                 }
+              )
         )
       ],
     );
 
 
-  }
+   }
 }
 
-/*
 
-
- */
