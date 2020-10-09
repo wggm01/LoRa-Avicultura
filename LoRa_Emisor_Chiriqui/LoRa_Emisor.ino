@@ -66,6 +66,7 @@ float RB,RS,c1,c2; //Variables para visualizacion
 //Promedios locales
 int count = 1;
 float avetemp, avepress, avehumi, avecompgas, avedist1, avedist2 = 0;
+float dist1sum, dist2sum, tempsum, humisum, gassum, pressum = 0;
 String aveframe;
 //Promedios locales
 
@@ -246,12 +247,12 @@ void loop() {
       //dummy first cycle to discard first values
       count++;
     } else if (count<1441) {
-      avedist1 = (dist1 + avedist1)/(count-1);
-      avedist2 = (dist2 + avedist2)/(count-1);
-      avetemp = (tempe + avetemp)/(count-1);
-      avehumi = (humi + avehumi)/(count-1);
-      avepress = (presion + avepress)/(count-1);
-      avecompgas = (compgas + avecompgas)/(count-1);
+      dist1sum = dist1+dist1sum; avedist1 = dist1sum/(count-1);
+      dist2sum = dist2+dist2sum; avedist2 = dist2sum/(count-1);
+      tempsum = tempe+tempsum; avetemp = tempsum/(count-1);
+      humisum = humi+humisum; avehumi = humisum/(count-1);
+      pressum = presion+pressum; avepress = pressum/(count-1);
+      gassum = compgas+gassum; avecompgas = gassum/(count-1);
       count++;
       if (count%5 == 0){
       String aveframe = String(avedist1)+","+String(avedist2)+","+String(avetemp)+","+String(avehumi)+","+String(avepress)+","+ String(avecompgas);
@@ -265,6 +266,7 @@ void loop() {
       LoRa.print(aveframe);
       LoRa.endPacket();
       Serial.println("Daily average measurement sent correctly!");
+      dist1sum, dist2sum, tempsum, humisum, pressum, gassum = 0;
     }
 
     String frame = String(latitude,6)+ "," +String(longitude,6)+ "," +nombre_corral+ "," + String(dist1) + "," + String(dist2) + "," +String(tempe)+ "," +String(humi)+ "," +String(presion)+ "," +String(compgas);
