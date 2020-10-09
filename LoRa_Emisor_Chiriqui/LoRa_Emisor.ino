@@ -11,6 +11,10 @@ double latitude = 8.46041475;
 double longitude = -82.41932337;
 //GPS UBICACION
 
+//MQTT Server Info
+int device_id = 1306;
+//MQTT Server Info
+
 //NOMBRE DEL CORRAL
 String nombre_corral = "CHI_01";
 //NOMBRE DEL CORRAL
@@ -58,6 +62,13 @@ portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
 String sf,rb,band,bw,rs,power;
 float RB,RS,c1,c2; //Variables para visualizacion
 //Configuraciones del transmisor
+
+//Promedios locales
+int count = 1;
+float avetemp, avepress, avehumi, avecompgas, avedist1, avedist2 = 0;
+String aveframe;
+//Promedios locales
+
 //------------Visualizacion de parametros
 void param (){
   c1=4/(4+4/CR);
@@ -207,7 +218,7 @@ timer = timerBegin(0, 240, true);
 timerAttachInterrupt(timer, &shot_pulse, CHANGE);
 timerAlarmWrite(timer, TRIG_US, true);
 timerAlarmEnable(timer);
-//interrupciones y timer  
+//interrupciones y timer
 }
 
 
@@ -221,21 +232,55 @@ void loop() {
     return;
     }
     else{
-    //Serial.println("Reading performed correctly!");
+    Serial.println("Reading Performed Correctly");
     
-    double gasresis = bme.gas_resistance;
-    double humi = bme.humidity;
-    double compgas = log(gasresis) + 0.04*humi;
+    int dist1 = echo_duration1/58;
+    int dist2 = echo_duration2/58;
+    long tempe = bme.temperature;
+    unsigned long presion = bme.pressure/100;
+    unsigned long gasresis = bme.gas_resistance;
+    float humi = bme.humidity;
+    float compgas = log(gasresis) + 0.04*humi;
+    
+    if (count ==1){
+      //dummy first cycle to discard first values
+      count++;
+    } else if (count<1441) {
+      avedist1 = (dist1 + avedist1)/(count-1);
+      avedist2 = (dist2 + avedist2)/(count-1);
+      avetemp = (tempe + avetemp)/(count-1);
+      avehumi = (humi + avehumi)/(count-1);
+      avepress = (presion + avepress)/(count-1);
+      avecompgas = (compgas + avecompgas)/(count-1);
+      count++;
+      if (count%5 == 0){
+      String aveframe = String(avedist1)+","+String(avedist2)+","+String(avetemp)+","+String(avehumi)+","+String(avepress)+","+ String(avecompgas);
+      Serial.print("Daily average so far: ");
+      Serial.println(aveframe);        
+      }
+    } else {
+      count = 1;
+      String aveframe = String(avedist1)+","+String(avedist2)+","+String(avetemp)+","+String(avehumi)+","+String(avepress)+","+ String(avecompgas);
+      LoRa.beginPacket();
+      LoRa.print(aveframe);
+      LoRa.endPacket();
+      Serial.println("Daily average measurement sent correctly!");
+    }
 
-    String frame = String(latitude,6)+ "," +String(longitude,6)+ "," +nombre_corral+ "," + String(echo_duration1/58) + "," + String(echo_duration2/58) + "," +String(bme.temperature)+ "," +String(bme.humidity)+ "," +String(bme.pressure / 100)+ "," +String(compgas);
-    
+    String frame = String(latitude,6)+ "," +String(longitude,6)+ "," +nombre_corral+ "," + String(dist1) + "," + String(dist2) + "," +String(tempe)+ "," +String(humi)+ "," +String(presion)+ "," +String(compgas);
+    //String LoRaframe = "<" + String(device_id) + ">field1=" + String(bme.temperature) + "&field2=" + String(bme.humidity) + "&field3=" + String(bme.pressure / 100) + "&field4=" + String(compgas);
+
     Heltec.display->clear();
     Heltec.display->drawString(0, 0, "GALPON ID:");
     Heltec.display->drawString(70, 0, nombre_corral);
   
     Heltec.display->drawString(0, 10, "AGUA:");
-    Heltec.display->drawString(40, 10, String(echo_duration1/58));
-    Heltec.display->drawString(60, 10, "cm");
+    Heltec.display->drawString(35, 10, String(echo_duration1/58));
+    Heltec.display->drawString(50, 10, "cm");
+    
+    Heltec.display->drawString(70, 10, "ALIM:");
+    Heltec.display->drawString(100, 10, String(echo_duration2/58));
+    Heltec.display->drawString(115, 10, "cm");
   
     Heltec.display->drawString(0, 20, "TEMP:");
     Heltec.display->drawString(40, 20, String(bme.temperature));
@@ -254,7 +299,7 @@ void loop() {
   
     Heltec.display->display();
     
-    //Serial.println(frame);
+    Serial.println(frame);
     LoRa.beginPacket();
     LoRa.print(frame);
     LoRa.endPacket();
