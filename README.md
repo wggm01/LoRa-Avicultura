@@ -1,11 +1,11 @@
 # LoRa-Avicultura
 
-Design and implement a poultry farm monitoring system capable of obtaining parameters related to the state of a farm’s poultry sheds in real time, through the utilization of the LoRa wireless communication protocol.
+Design and implementation of a poultry farm monitoring system capable of obtaining and uploading enviromental parameters intrinsic to the farm’s sheds to an online database in real time, through the utilization of the LoRa wireless communication protocol.
 
-* [Tecnology University of Panama](https://www.utp.ac.pa/)
-* [Faculty: Electric Engineering](http://www.fie.utp.ac.pa/)
-* Bachelor of Electronic Engineering and Telecommunications
-* Professor: Dr. Fernando Merchán
+* [Technological University of Panama](https://www.utp.ac.pa/)
+* [Faculty of Electrical Engineering](http://www.fie.utp.ac.pa/)
+* Bachelor of Science in Electronic and Telecommunications Engineering
+* Supervising Professor: Fernando Merchán, PhD
 ## Table of contents
 * [Project Members](#project-members)
 * [Requeriments](#requeriments)
