@@ -20,20 +20,20 @@ class _LoadingState extends State<Loading> {
         connflag = false;
       });
 
-      Navigator.pushNamed(context, '/home');
+      Navigator.pushReplacementNamed(context, '/home');
     } else if (connectivityResult == ConnectivityResult.wifi) {
       // I am connected to a wifi network.
       setState(() {
         connflag = false;
       });
 
-      Navigator.pushNamed(context, '/home');
+      Navigator.pushReplacementNamed(context, '/home');
     }
-    else{
+    /*else{
       setState(() {
         connflag = true;
       });
-    }
+    }*/
 
 
   }
@@ -91,7 +91,7 @@ class _LoadingState extends State<Loading> {
     }
     else{
       return Container(
-        color: Colors.blue,
+        color: Colors.red,
       );
     }
   }
