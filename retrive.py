@@ -6,6 +6,7 @@ import paho.mqtt.client as mqtt
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
+from google.cloud import firestore as geo
 
 capath = r'/etc/ssl/certs/DST_Root_CA_X3.pem' #certificado root ssl
 json_file = r'/home/pi/googlekeys/avicultura-lora-firebase-adminsdk-w9yh3-a0e6634d82.json' #private key
@@ -20,19 +21,44 @@ def on_connect(client,userdata,flags, rc):
 
 def on_message(client,userdata,message):
       payload=message.payload.decode().split(',') #obtner payload
+      paylength=len(payload)
       provincia=message.topic
       provincia = re.findall("/([a-zA-Z]+)/",provincia) #obtener provincia
      # print(provincia[0])
      # print(payload)
-      #crear referencia a collection
+      coords = geo.GeoPoint(float(payload[1]),float(payload[2]))
+       
       doc_ref = db.collection(u'nodos').document(str(provincia[0])) #referencia a la coleccion
-      #subir data a base de datos
-      doc_ref.set({
-          u'fecha_hora': payload[0],
-          u'ubicacion': [float(payload[1]),float(payload[2])], #futuro
-          u'nombre_corral': payload[3],
-          u'medidas': [float(payload[4]),float(payload[5]),float(payload[6]),float(payload[7]),float(payload[8]),float(payload[9])]
-      })
+
+      doc = doc_ref.get() #chequear si existe el documento.
+
+      if (doc.exists):
+
+          if (paylength == 10) : #subir data a base de datos
+            doc_ref.update({
+                u'fecha_hora': payload[0],
+                u'ubicacion': coords, #futuro
+                u'nombre_corral': payload[3],
+                u'medidas': [float(payload[4]),float(payload[5]),float(payload[6]),float(payload[7]),float(payload[8]),float(payload[9])], 
+            })
+      
+          elif(paylength == 6):
+            doc_ref.update({
+            u'promedio': [payload[0],payload[1],payload[2],payload[3],payload[4],payload[5]]
+            }) 
+      else:
+         if (paylength == 10) : #subir data a base de datos
+            doc_ref.set({
+                u'fecha_hora': payload[0],
+                u'ubicacion': coords, #futuro
+                u'nombre_corral': payload[3],
+                u'medidas': [float(payload[4]),float(payload[5]),float(payload[6]),float(payload[7]),float(payload[8]),float(payload[9])], 
+            })
+      
+         elif(paylength == 6):
+            doc_ref.set({
+            u'promedio': [payload[0],payload[1],payload[2],payload[3],payload[4],payload[5]]
+            })   
 
 def main():
        client = mqtt.Client(client_id='Recuperacion',clean_session=False)
