@@ -7,10 +7,7 @@ import 'package:lora_avicultura/paginas/ubicacion_nodos.dart';
 //import 'package:lora_avicultura/paginas/salud_sistema.dart';
 //import 'package:lora_avicultura/paginas/registro_errores.dart';
 
-/*
-todo 1. agregar notificaciones
-todo 2. agregar dialog box a vista resumida para ver los valores por mes.
- */
+
 
 void main() {
   runApp(

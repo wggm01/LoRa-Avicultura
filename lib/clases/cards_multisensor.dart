@@ -25,14 +25,14 @@ class CardSensor extends StatefulWidget {
   _CardSensorState createState() => _CardSensorState();
 }
 
-//todo 1. ajustar data de alert dialog con los campos correspondientes
+
 
 class _CardSensorState extends State<CardSensor> {
   Map<String, dynamic> get documento {
     return widget.snapshot.data();
   }
 
-  ShDialog(BuildContext context) {
+  shDialog(BuildContext context) {
     return showDialog(context: context, builder: (context) {
       return AlertDialog(
         title: Text('Valores por mes:'),
@@ -87,9 +87,9 @@ class _CardSensorState extends State<CardSensor> {
                   padding: EdgeInsets.all(0),
                   color: Colors.red,
                   highlightColor: Colors.pink,
-                  icon: Icon(Icons.more_vert_sharp),
+                  icon: Icon(Icons.list_alt_sharp),
                     onPressed: (){
-                      ShDialog(context);
+                      shDialog(context);
                 })
               ],
             ),

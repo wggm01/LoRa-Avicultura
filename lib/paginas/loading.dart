@@ -81,7 +81,7 @@ class _LoadingState extends State<Loading> {
                 child: Text('Reintentar',style: headLabel,),
                 onPressed: () {
                   setState(() {
-                    check();
+                    //check();
                   });
                 },
               ),
