@@ -237,8 +237,8 @@ void loop() {
     
     int dist1 = echo_duration1/58;
     int dist2 = echo_duration2/58;
-    long tempe = bme.temperature;
-    unsigned long presion = bme.pressure/100;
+    float tempe = bme.temperature;
+    float presion = bme.pressure/100;
     unsigned long gasresis = bme.gas_resistance;
     float humi = bme.humidity;
     float compgas = log(gasresis) + 0.04*humi;
@@ -269,8 +269,7 @@ void loop() {
       dist1sum, dist2sum, tempsum, humisum, pressum, gassum = 0;
     }
 
-    String frame = String(latitude,6)+ "," +String(longitude,6)+ "," +nombre_corral+ "," + String(dist1) + "," + String(dist2) + "," +String(tempe)+ "," +String(humi)+ "," +String(presion)+ "," +String(compgas);
-    //String LoRaframe = "<" + String(device_id) + ">field1=" + String(bme.temperature) + "&field2=" + String(bme.humidity) + "&field3=" + String(bme.pressure / 100) + "&field4=" + String(compgas);
+    String frame = "<" + String(device_id) + ">" + String(latitude,6)+ "," +String(longitude,6)+ "," +nombre_corral+ "," + String(dist1) + "," + String(dist2) + "," +String(tempe)+ "," +String(humi)+ "," +String(presion)+ "," +String(compgas);
 
     Heltec.display->clear();
     Heltec.display->drawString(0, 0, "GALPON ID:");
