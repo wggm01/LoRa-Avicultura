@@ -47,18 +47,15 @@ def on_message(client,userdata,message):
             u'promedio': [payload[0],payload[1],payload[2],payload[3],payload[4],payload[5]]
             }) 
       else:
-         if (paylength == 10) : #subir data a base de datos
             doc_ref.set({
                 u'fecha_hora': payload[0],
                 u'ubicacion': coords, #futuro
                 u'nombre_corral': payload[3],
                 u'medidas': [float(payload[4]),float(payload[5]),float(payload[6]),float(payload[7]),float(payload[8]),float(payload[9])], 
+                u'promedio': [0,0,0,0,0,0]
             })
       
-         elif(paylength == 6):
-            doc_ref.set({
-            u'promedio': [payload[0],payload[1],payload[2],payload[3],payload[4],payload[5]]
-            })   
+          
 
 def main():
        client = mqtt.Client(client_id='Recuperacion',clean_session=False)
