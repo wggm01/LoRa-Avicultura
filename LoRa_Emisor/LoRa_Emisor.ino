@@ -58,6 +58,14 @@ portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
 String sf,rb,band,bw,rs,power;
 float RB,RS,c1,c2; //Variables para visualizacion
 //Configuraciones del transmisor
+
+//Promedios locales
+int count = 1;
+float avetemp, avepress, avehumi, avecompgas, avedist1, avedist2 = 0;
+float dist1sum, dist2sum, tempsum, humisum, gassum, pressum = 0;
+String aveframe;
+//Promedios locales
+
 //------------Visualizacion de parametros
 void param (){
   c1=4/(4+4/CR);
@@ -222,7 +230,44 @@ void loop() {
     return;
     }
     else{
-    String frame = String(latitude,6)+ "," +String(longitude,6)+ "," +nombre_corral+ "," +String(echo_duration1/58) + "," + String(echo_duration2/58)+ "," +String(bme.temperature)+ "," +String(bme.humidity)+ "," +String(bme.pressure / 100)+ "," +String(bme.gas_resistance / 1000.0);
+      
+    Serial.println("Reading Performed Correctly");
+    int dist1 = echo_duration1/58;
+    int dist2 = echo_duration2/58;
+    float tempe = bme.temperature;
+    float presion = (bme.pressure/100)/1000;
+    unsigned long gasresis = bme.gas_resistance;
+    float humi = bme.humidity;
+    float compgas = log(gasresis) + 0.04*humi;
+    if(isinf(compgas)){compgas=0;}
+
+    if (count ==1){
+      //dummy first cycle to discard first values
+      count++;
+    } else if (count<1441) {
+      dist1sum = dist1+dist1sum; avedist1 = dist1sum/(count-1);
+      dist2sum = dist2+dist2sum; avedist2 = dist2sum/(count-1);
+      tempsum = tempe+tempsum; avetemp = tempsum/(count-1);
+      humisum = humi+humisum; avehumi = humisum/(count-1);
+      pressum = presion+pressum; avepress = pressum/(count-1);
+      gassum = compgas+gassum; avecompgas = gassum/(count-1);
+      count++;
+      if (count%5 == 0){
+      String aveframe = String(avedist1)+","+String(avedist2)+","+String(avetemp)+","+String(avehumi)+","+String(avepress)+","+ String(avecompgas);
+      Serial.print("Daily average so far: ");
+      Serial.println(aveframe);        
+      }
+    } else {
+      count = 1;
+      String aveframe = String(avedist1)+","+String(avedist2)+","+String(avetemp)+","+String(avehumi)+","+String(avepress)+","+ String(avecompgas);
+      LoRa.beginPacket();
+      LoRa.print(aveframe);
+      LoRa.endPacket();
+      Serial.println("Daily average measurement sent correctly!");
+      dist1sum, dist2sum, tempsum, humisum, pressum, gassum = 0;
+    }
+    
+    String frame = String(latitude,6)+ "," +String(longitude,6)+ "," +nombre_corral+ "," + String(dist1) + "," + String(dist2) + "," +String(tempe)+ "," +String(humi)+ "," +String(presion)+ "," +String(compgas);
     //Serial.println(frame);
     LoRa.beginPacket();
     LoRa.print(frame);

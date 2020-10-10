@@ -40,6 +40,23 @@ void LoRaData(){
   Heltec.display->clear();
 }
 
+//Conectar a aws
+
+//obterner la hora
+String printLocalTime()
+{
+  char buff[80];
+  struct tm timeinfo;
+  if(!getLocalTime(&timeinfo)){
+    Serial.println("Failed to obtain time");
+  }
+  strftime(buff,80,"%D %T",&timeinfo);
+  //Serial.print(buff);
+  return buff;
+
+}
+//obtener la hora
+
 void cbk(int packetSize) {
   packet ="";
   packSize = String(packetSize,DEC);
@@ -54,7 +71,8 @@ void cbk(int packetSize) {
  // LoRaData();
   
   //Envio de data al broker
-  String timedate =ctime(&now);
+  String timedate = printLocalTime();
+  //String timedate =ctime(&now);
   timedate.replace("\n", "");
   packet = timedate + ","+ packet; 
   int trama_len = packet.length() + 1;
