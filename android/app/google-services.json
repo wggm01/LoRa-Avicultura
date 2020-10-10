@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:267056910461:android:69cb00d6da6f7bbb49a114",
+        "mobilesdk_app_id": "1:267056910461:android:1bbc257be33d93c149a114",
         "android_client_info": {
-          "package_name": "jiclora.duckdns.lora_avicultura"
+          "package_name": "lorajicavicultura.pa"
         }
       },
       "oauth_client": [
