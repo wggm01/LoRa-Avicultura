@@ -44,7 +44,7 @@ def on_message(client,userdata,message):
       
           elif(paylength == 6):
             doc_ref.update({
-            u'promedio': [payload[0],payload[1],payload[2],payload[3],payload[4],payload[5]]
+            u'promedio': [float(payload[0]),float(payload[1]),float(payload[2]),float(payload[3]),float(payload[4]),float(payload[5])]
             }) 
       else:
             doc_ref.set({
