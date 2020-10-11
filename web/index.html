@@ -26,28 +26,15 @@
        https://developers.google.com/web/fundamentals/primers/service-workers -->
 
   <!-- The core Firebase JS SDK is always required and must be listed first -->
-  <script src="https://www.gstatic.com/firebasejs/7.23.0/firebase-app.js"></script>
+  <script  src="https://www.gstatic.com/firebasejs/7.23.0/firebase-app.js"></script>
 
 
   <!-- TODO: Add SDKs for Firebase products that you want to use
        https://firebase.google.com/docs/web/setup#available-libraries -->
-  <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-firestore.js"></script>
+  <script  src="https://www.gstatic.com/firebasejs/7.22.1/firebase-auth.js"></script>
+  <script  src="https://www.gstatic.com/firebasejs/7.22.1/firebase-firestore.js"></script>
 
-  <script>
-  // Your web app's Firebase configuration
-  var firebaseConfig = {
-    apiKey: "AIzaSyBqnX0Ef7xA6TCaBRnm-ycB5iUmyklsLLI",
-    authDomain: "avicultura-lora.firebaseapp.com",
-    databaseURL: "https://avicultura-lora.firebaseio.com",
-    projectId: "avicultura-lora",
-    storageBucket: "avicultura-lora.appspot.com",
-    messagingSenderId: "267056910461",
-    appId: "1:267056910461:web:737a8259f17701d449a114"
-  };
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-</script>
+  <script  src="./init-firebase.js"></script>
 
   <script>
     if ('serviceWorker' in navigator) {
