@@ -39,12 +39,12 @@ class _CardSensorState extends State<CardSensor> {
         content: SingleChildScrollView(
           child: ListBody(
             children: [
-              Text('Agua consumida:'),
-              Text('Alimento consumido: '),
-              Text('Temperatura promedio:'),
-              Text('Humedad promedio:'),
-              Text('Presión promedio:'),
-              Text('IAQ promedio:'),
+              Text('Agua consumida:' + documento['promedio'][0].toString()),
+              Text('Alimento consumido:' + documento['promedio'][1].toString()),
+              Text('Temperatura promedio:'+ documento['promedio'][2].toString()),
+              Text('Humedad promedio:'+ documento['promedio'][3].toString()),
+              Text('Presión promedio:'+ documento['promedio'][4].toString()),
+              Text('IAQ promedio:'+ documento['promedio'][5].toString()),
             ],
           ),
         ),
@@ -179,7 +179,7 @@ class _CardSensorState extends State<CardSensor> {
                 child: Column(
                   children: [
                     Text(
-                      documento['medidas'][4].toString()+ 'hpa',
+                      documento['medidas'][4].toString()+ 'Khpa',
                       style: CardSensor.valueLabel,
                     ),
                     Text(

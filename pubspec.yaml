@@ -32,10 +32,13 @@ dependencies:
   fl_chart: ^0.11.1
   cloud_firestore: ^0.14.0+2
   google_maps_flutter: ^1.0.2
+  google_maps_flutter_web: ^0.1.0
   flutter_spinkit: ^4.1.2+1
   connectivity: ^0.4.9+3
   flutter_launcher_icons: "^0.8.0"
   change_app_package_name: ^0.1.2
+  firebase_auth: ^0.18.1+2
+
 
 dev_dependencies:
   flutter_test:
