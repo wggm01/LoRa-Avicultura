@@ -26,7 +26,6 @@ def on_message(client,userdata,message):
       provincia = re.findall("/([a-zA-Z]+)/",provincia) #obtener provincia
      # print(provincia[0])
      # print(payload)
-      coords = geo.GeoPoint(float(payload[1]),float(payload[2]))
        
       doc_ref = db.collection(u'nodos').document(str(provincia[0])) #referencia a la coleccion
 
@@ -35,6 +34,7 @@ def on_message(client,userdata,message):
       if (doc.exists):
 
           if (paylength == 10) : #subir data a base de datos
+            coords = geo.GeoPoint(float(payload[1]),float(payload[2]))
             doc_ref.update({
                 u'fecha_hora': payload[0],
                 u'ubicacion': coords, #futuro
@@ -47,6 +47,7 @@ def on_message(client,userdata,message):
             u'promedio': [float(payload[0]),float(payload[1]),float(payload[2]),float(payload[3]),float(payload[4]),float(payload[5])]
             }) 
       else:
+            coords = geo.GeoPoint(float(payload[1]),float(payload[2]))
             doc_ref.set({
                 u'fecha_hora': payload[0],
                 u'ubicacion': coords, #futuro
