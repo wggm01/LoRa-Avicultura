@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import ssl
 import sys
 import os
