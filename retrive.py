@@ -68,8 +68,8 @@ def main():
        client.connect(host='jiclora.duckdns.org',port=8883)
        client.loop_forever()
 
-if __name__=="__main__":
-    main()
-    print('codigo ejecutado correctamente')
+#if __name__=="__main__":
+main()
+#    print('codigo ejecutado correctamente')
 
 sys.exit(0)
