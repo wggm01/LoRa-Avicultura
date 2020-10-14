@@ -70,5 +70,6 @@ def main():
 
 if __name__=="__main__":
     main()
+    print('codigo ejecutado correctamente')
 
 sys.exit(0)
