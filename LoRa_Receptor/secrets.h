@@ -6,7 +6,7 @@ const char pass[] = "vnxgn2X5";
 #define HOSTNAME "PanamaDonbosco"
 
 const char *MQTT_HOST = "jiclora.duckdns.org";
-const int MQTT_PORT = 8883;
+const int MQTT_PORT = 3883;
 const char *MQTT_USER = "pi"; // leave blank if no credentials used
 const char *MQTT_PASS = "raspberry"; // leave blank if no credentials used
 
