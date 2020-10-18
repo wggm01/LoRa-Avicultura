@@ -65,7 +65,7 @@ def main():
        client.tls_set(capath,tls_version=ssl.PROTOCOL_TLSv1_2)
        client.on_connect=on_connect
        client.on_message=on_message
-       client.connect(host='jiclora.duckdns.org',port=8883)
+       client.connect(host='jiclora.duckdns.org',port=3883)
        client.loop_forever()
 
 #if __name__=="__main__":
