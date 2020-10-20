@@ -21,8 +21,12 @@ def on_connect(client,userdata,flags, rc):
         client.subscribe("nodos/+/medidas")
 
 def on_message(client,userdata,message):
-      payload=message.payload.decode().split(',') #obtner payload
+
       paylength=len(payload)
+      try:
+         payload=message.payload.decode().split(',') #obtner payload
+      except:
+        pass
       provincia=message.topic
       provincia = re.findall("/([a-zA-Z]+)/",provincia) #obtener provincia
      # print(provincia[0])
