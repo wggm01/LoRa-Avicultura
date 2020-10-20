@@ -27,7 +27,6 @@ def on_message(client,userdata,message):
          payload=message.payload.decode().split(',') #obtner payload
          paylength=len(payload)
       except:
-        global check
         check = False
         pass
 
