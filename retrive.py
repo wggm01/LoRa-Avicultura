@@ -8,7 +8,7 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 from google.cloud import firestore as geo
-
+check = None 
 capath = r'/etc/ssl/certs/DST_Root_CA_X3.pem' #certificado root ssl
 json_file = r'/home/pi/gkey/avicultura.json' #private key
 #credenciales de firebase
@@ -21,13 +21,14 @@ def on_connect(client,userdata,flags, rc):
         client.subscribe("nodos/+/medidas")
 
 def on_message(client,userdata,message):
-
+      check == True
       try:
          payload=message.payload.decode().split(',') #obtner payload
          paylength=len(payload)
       except:
+        check == False
         pass
-      
+
       provincia=message.topic
       provincia = re.findall("/([a-zA-Z]+)/",provincia) #obtener provincia
      # print(provincia[0])
@@ -39,7 +40,7 @@ def on_message(client,userdata,message):
 
       if (doc.exists):
 
-          if (paylength == 10) : #subir data a base de datos
+          if (paylength == 10 and check == True) : #subir data a base de datos
             coords = geo.GeoPoint(float(payload[1]),float(payload[2]))
             doc_ref.update({
                 u'fecha_hora': payload[0],
@@ -48,11 +49,11 @@ def on_message(client,userdata,message):
                 u'medidas': [float(payload[4]),float(payload[5]),float(payload[6]),float(payload[7]),float(payload[8]),float(payload[9])], 
             })
       
-          elif(paylength == 6):
+          elif(paylength == 6 and check == True):
             doc_ref.update({
             u'promedio': [float(payload[0]),float(payload[1]),float(payload[2]),float(payload[3]),float(payload[4]),float(payload[5])]
             }) 
-      else:
+      elif(check == True):
             coords = geo.GeoPoint(float(payload[1]),float(payload[2]))
             doc_ref.set({
                 u'fecha_hora': payload[0],
