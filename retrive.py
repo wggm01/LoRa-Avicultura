@@ -40,20 +40,22 @@ def on_message(client,userdata,message):
       doc = doc_ref.get() #chequear si existe el documento.
 
       if (doc.exists):
+          if(check==True):
 
-          if (paylength == 10 and check == True) : #subir data a base de datos
-            coords = geo.GeoPoint(float(payload[1]),float(payload[2]))
-            doc_ref.update({
-                u'fecha_hora': payload[0],
-                u'ubicacion': coords, #futuro
-                u'nombre_corral': payload[3],
-                u'medidas': [float(payload[4]),float(payload[5]),float(payload[6]),float(payload[7]),float(payload[8]),float(payload[9])], 
-            })
+            if (paylength == 10) : #subir data a base de datos
+              coords = geo.GeoPoint(float(payload[1]),float(payload[2]))
+              doc_ref.update({
+                  u'fecha_hora': payload[0],
+                  u'ubicacion': coords, #futuro
+                  u'nombre_corral': payload[3],
+                  u'medidas': [float(payload[4]),float(payload[5]),float(payload[6]),float(payload[7]),float(payload[8]),float(payload[9])], 
+              })
       
-          elif(paylength == 6 and check == True):
-            doc_ref.update({
-            u'promedio': [float(payload[0]),float(payload[1]),float(payload[2]),float(payload[3]),float(payload[4]),float(payload[5])]
-            }) 
+            elif(paylength == 6):
+              doc_ref.update({
+              u'promedio': [float(payload[0]),float(payload[1]),float(payload[2]),float(payload[3]),float(payload[4]),float(payload[5])]
+              }) 
+              
       elif(check == True):
             coords = geo.GeoPoint(float(payload[1]),float(payload[2]))
             doc_ref.set({
