@@ -21,12 +21,14 @@ def on_connect(client,userdata,flags, rc):
         client.subscribe("nodos/+/medidas")
 
 def on_message(client,userdata,message):
-      check == True
+      global check
+      check = True
       try:
          payload=message.payload.decode().split(',') #obtner payload
          paylength=len(payload)
       except:
-        check == False
+        global check
+        check = False
         pass
 
       provincia=message.topic
