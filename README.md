@@ -22,10 +22,8 @@ Design and implementation of a poultry farm monitoring system capable of obtaini
 * Flutter 
 ## Resources:
 ##### 
-##### Topology
-
-##### Prototype
-
+##### Topology & Prototype
+![Prototype](./img/system.png)
 ##### Tests
 
 
