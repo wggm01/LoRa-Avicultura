@@ -15,6 +15,8 @@ StaticJsonDocument<410> payload;
 //MQTT CONF
 WiFiClientSecure net = WiFiClientSecure();
 MQTTClient mqttClient = MQTTClient(410);
+int rst_flag =20 ;
+boolean LOST_BROKER = false;
 //MQTT CONF
 
 //Informacion necesaria para el  receptor/demodulador
@@ -59,7 +61,11 @@ void cbk(int packetSize) {
   //serializeJsonPretty(payload,Serial);
   char packet[410];
   serializeJson(payload, packet);
-  mqttClient.publish(MQTT_PUB_TOPIC,packet);
+  if(mqttClient.publish(MQTT_PUB_TOPIC,packet)){
+    Serial.println("paquete enviado");
+    }else{
+      LOST_BROKER = true;
+      }
   //Envio de data al broker
 }
 
@@ -88,7 +94,14 @@ void connect_jiclora(){
 
   while (WiFi.status() != WL_CONNECTED){
     delay(500);
-    Serial.print(".");
+    rst_flag -=1;
+    //Serial.print("Contador antes de aplicar rst de software: ");
+   // Serial.println(rst_flag);
+    if(rst_flag ==0){
+      //Serial.println("Reseteando ESP32");
+      ESP.restart();
+      }
+    //Serial.print(".");
   }
   Serial.println("WIFI Connected");
 
@@ -119,6 +132,12 @@ void connect_jiclora(){
   //MQTT INCIALIZACIONES 
   }
 
+  void set_snmp(){
+  Serial.print("Setting time using SNTP: ");
+  configTime(-5 * 3600, 0, "pool.ntp.org");
+  Serial.println(printLocalTime());
+    }
+
 void setup() { 
   pinMode(LED,OUTPUT);
   Heltec.begin(true /*DisplayEnable Enable*/, true /*Heltec.Heltec.Heltec.LoRa Disable*/, true /*Serial Enable*/, true /*PABOOST Enable*/, BAND /*long BAND*/);
@@ -129,13 +148,15 @@ void setup() {
   //LoRa.onReceive(cbk);
   LoRa.receive();
   connect_jiclora();
-  Serial.print("Setting time using SNTP: ");
-  configTime(-5 * 3600, 0, "pool.ntp.org");
-  Serial.println(printLocalTime());
+  set_snmp();
   }
 
 void loop() {
-  
+  if (WiFi.status()== WL_DISCONNECTED || LOST_BROKER == true ){
+    connect_jiclora(); //reconecta 
+    set_snmp();// configura el la hora nuevamente
+    LOST_BROKER = false;
+  }else{  
   //Recepcion de data
   int packetSize = LoRa.parsePacket();
   if (packetSize){
@@ -144,4 +165,5 @@ void loop() {
     }
    //Recepcion de data
    mqttClient.loop(); 
-    }
+  }
+  }
