@@ -25,6 +25,7 @@ def on_message(client,userdata,message):
       global check
       check = True
       try:
+         payload=message.payload.decode()
          data = json.loads(payload)
       except:
         check = False
@@ -33,9 +34,8 @@ def on_message(client,userdata,message):
       provincia=message.topic
       provincia = re.findall("/([a-zA-Z]+)/",provincia) #obtener provincia
      # print(provincia[0])
-      
       if('medidas' in data):
-        print(data['Corral'],check,type(data['medidas']['agua']))
+        print(data['Corral'],check,data['hora'],type(data['medidas']['agua']))
       
       # doc_ref = db.collection(u'nodos').document(str(provincia[0])) #referencia a la coleccion
 
