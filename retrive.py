@@ -26,7 +26,6 @@ def on_message(client,userdata,message):
       check = True
       try:
          payload=message.payload.decode()
-         paylength=len(payload)
       except:
         check = False
         pass
@@ -34,9 +33,8 @@ def on_message(client,userdata,message):
       provincia=message.topic
       provincia = re.findall("/([a-zA-Z]+)/",provincia) #obtener provincia
      # print(provincia[0])
-      print(payload)
       data = json.loads(payload)
-      print(data)
+      print(data['Corral'],data['medidas']['comida'])
        
       # doc_ref = db.collection(u'nodos').document(str(provincia[0])) #referencia a la coleccion
 
