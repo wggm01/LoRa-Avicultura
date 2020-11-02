@@ -3,6 +3,7 @@ import ssl
 import sys
 import os
 import re
+import json
 import paho.mqtt.client as mqtt
 import firebase_admin
 from firebase_admin import credentials
@@ -24,7 +25,7 @@ def on_message(client,userdata,message):
       global check
       check = True
       try:
-         payload=message.payload.decode().split(',') #obtner payload
+         payload=message.payload.decode()
          paylength=len(payload)
       except:
         check = False
@@ -33,38 +34,40 @@ def on_message(client,userdata,message):
       provincia=message.topic
       provincia = re.findall("/([a-zA-Z]+)/",provincia) #obtener provincia
      # print(provincia[0])
-     # print(payload)
+      print(payload)
+      data = json.loads(payload)
+      print(data)
        
-      doc_ref = db.collection(u'nodos').document(str(provincia[0])) #referencia a la coleccion
+      # doc_ref = db.collection(u'nodos').document(str(provincia[0])) #referencia a la coleccion
 
-      doc = doc_ref.get() #chequear si existe el documento.
+      # doc = doc_ref.get() #chequear si existe el documento.
 
-      if (doc.exists):
-          if(check==True):
+      # if (doc.exists):
+      #     if(check==True):
 
-            if (paylength == 10) : #subir data a base de datos
-              coords = geo.GeoPoint(float(payload[1]),float(payload[2]))
-              doc_ref.update({
-                  u'fecha_hora': payload[0],
-                  u'ubicacion': coords, #futuro
-                  u'nombre_corral': payload[3],
-                  u'medidas': [float(payload[4]),float(payload[5]),float(payload[6]),float(payload[7]),float(payload[8]),float(payload[9])], 
-              })
+      #       if (paylength == 10) : #subir data a base de datos
+      #         coords = geo.GeoPoint(float(payload[1]),float(payload[2]))
+      #         doc_ref.update({
+      #             u'fecha_hora': payload[0],
+      #             u'ubicacion': coords, #futuro
+      #             u'nombre_corral': payload[3],
+      #             u'medidas': [float(payload[4]),float(payload[5]),float(payload[6]),float(payload[7]),float(payload[8]),float(payload[9])], 
+      #         })
       
-            elif(paylength == 6):
-              doc_ref.update({
-              u'promedio': [float(payload[0]),float(payload[1]),float(payload[2]),float(payload[3]),float(payload[4]),float(payload[5])]
-              }) 
+      #       elif(paylength == 6):
+      #         doc_ref.update({
+      #         u'promedio': [float(payload[0]),float(payload[1]),float(payload[2]),float(payload[3]),float(payload[4]),float(payload[5])]
+      #         }) 
               
-      elif(check == True):
-            coords = geo.GeoPoint(float(payload[1]),float(payload[2]))
-            doc_ref.set({
-                u'fecha_hora': payload[0],
-                u'ubicacion': coords, #futuro
-                u'nombre_corral': payload[3],
-                u'medidas': [float(payload[4]),float(payload[5]),float(payload[6]),float(payload[7]),float(payload[8]),float(payload[9])], 
-                u'promedio': [0,0,0,0,0,0]
-            })
+      # elif(check == True):
+      #       coords = geo.GeoPoint(float(payload[1]),float(payload[2]))
+      #       doc_ref.set({
+      #           u'fecha_hora': payload[0],
+      #           u'ubicacion': coords, #futuro
+      #           u'nombre_corral': payload[3],
+      #           u'medidas': [float(payload[4]),float(payload[5]),float(payload[6]),float(payload[7]),float(payload[8]),float(payload[9])], 
+      #           u'promedio': [0,0,0,0,0,0]
+      #       })
       
           
 
