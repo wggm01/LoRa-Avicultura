@@ -35,9 +35,9 @@ def on_message(client,userdata,message):
       provincia = re.findall("/([a-zA-Z]+)/",provincia) #obtener provincia
      # print(provincia[0])
       doc_ref = db.collection(u'nodos').document('PanamaDonbosco') #referencia a la coleccion
-
+      print("referencia creada")
       doc = doc_ref.get() #chequear si existe el documento.
-
+      print("obtencion de documento")
       if (doc.exists):
         print("existe")
       #   if(check==True):
