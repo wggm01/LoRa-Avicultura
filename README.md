@@ -24,7 +24,8 @@ Design and implementation of a poultry farm monitoring system capable of obtaini
 ##### 
 ##### Topology & Prototype
 ![Prototype](./img/system.png)
-##### Tests
+##### Test
+![Test](./img/tests.png)
 
 
 
