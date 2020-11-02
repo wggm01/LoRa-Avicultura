@@ -42,7 +42,7 @@ def on_message(client,userdata,message):
       if (doc.exists):
            if(check==True):
 
-             if ('medidas' in data) : #chequear si es valores de sensore o valores referentes a la salud del sistema
+             if (1==1) : #chequear si es valores de sensore o valores referentes a la salud del sistema
                coords = geo.GeoPoint(float(data['ubicacion']['lat']),float(data['ubicacion']['long']))
                doc_ref.update({
                    u'fecha_hora': data['hora'],
@@ -52,7 +52,7 @@ def on_message(client,userdata,message):
                    u'promedio': [float(data['avgmedidas']['agua']),float(data['avgmedidas']['comida']),float(data['avgmedidas']['temperatura']),float(data['avgmedidas']['humedad']),float(data['avgmedidas']['presion']),float(data['avgmedidas']['gas'])] 
                })
               
-      elif(check == True):
+      elif(1==1):
              if ( 'medidas' in data) :
               coords = geo.GeoPoint(float(data['ubicacion']['lat']),float(data['ubicacion']['long']))
               doc_ref.set({
