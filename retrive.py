@@ -37,11 +37,12 @@ def on_message(client,userdata,message):
       if('medidas' in data):
         print(data['Corral'],check,data['hora'],type(data['medidas']['agua']),str(provincia[0]))
       
-      # doc_ref = db.collection(u'nodos').document(str(provincia[0])) #referencia a la coleccion
+      doc_ref = db.collection(u'nodos').document(str(provincia[0])) #referencia a la coleccion
 
-      # doc = doc_ref.get() #chequear si existe el documento.
+      doc = doc_ref.get() #chequear si existe el documento.
 
-      # if (doc.exists):
+      if (doc.exists):
+        print("existe")
       #   if(check==True):
       #     if (1==1) : #chequear si es valores de sensore o valores referentes a la salud del sistema
       #       coords = geo.GeoPoint(float(data['ubicacion']['lat']),float(data['ubicacion']['long']))
@@ -53,7 +54,8 @@ def on_message(client,userdata,message):
       #       u'promedio': [float(data['avgmedidas']['agua']),float(data['avgmedidas']['comida']),float(data['avgmedidas']['temperatura']),float(data['avgmedidas']['humedad']),float(data['avgmedidas']['presion']),float(data['avgmedidas']['gas'])] 
       #       })
               
-      # elif(check==True):
+      elif(check==True):
+        print("no existe, creando...")
       #   if (1==1) :
       #     coords = geo.GeoPoint(float(data['ubicacion']['lat']),float(data['ubicacion']['long']))
       #     doc_ref.set({
