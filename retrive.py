@@ -34,38 +34,33 @@ def on_message(client,userdata,message):
       provincia = re.findall("/([a-zA-Z]+)/",provincia) #obtener provincia
      # print(provincia[0])
       data = json.loads(payload)
-      print(data['Corral'],data['medidas']['comida'])
-       
-      # doc_ref = db.collection(u'nodos').document(str(provincia[0])) #referencia a la coleccion
-
-      # doc = doc_ref.get() #chequear si existe el documento.
-
-      # if (doc.exists):
-      #     if(check==True):
-
-      #       if (paylength == 10) : #subir data a base de datos
-      #         coords = geo.GeoPoint(float(payload[1]),float(payload[2]))
-      #         doc_ref.update({
-      #             u'fecha_hora': payload[0],
-      #             u'ubicacion': coords, #futuro
-      #             u'nombre_corral': payload[3],
-      #             u'medidas': [float(payload[4]),float(payload[5]),float(payload[6]),float(payload[7]),float(payload[8]),float(payload[9])], 
-      #         })
       
-      #       elif(paylength == 6):
-      #         doc_ref.update({
-      #         u'promedio': [float(payload[0]),float(payload[1]),float(payload[2]),float(payload[3]),float(payload[4]),float(payload[5])]
-      #         }) 
+      doc_ref = db.collection(u'nodos').document(str(provincia[0])) #referencia a la coleccion
+
+      doc = doc_ref.get() #chequear si existe el documento.
+
+      if (doc.exists):
+           if(check==True):
+
+             if (data['medidas'] in data) : #chequear si es valores de sensore o valores referentes a la salud del sistema
+               coords = geo.GeoPoint(float(data['ubicacion']['lat']),float(data['ubicacion']['long']))
+               doc_ref.update({
+                   u'fecha_hora': data['hora'],
+                   u'ubicacion': coords, #futuro
+                   u'nombre_corral': data['Corral'],
+                   u'medidas': [float(data['medidas']['agua']),float(data['medidas']['comida']),float(data['medidas']['temperatura']),float(data['medidas']['humedad']),float(data['medidas']['presion']),float(data['medidas']['gas'])],
+                   u'promedio': [float(data['avgmedidas']['agua']),float(data['avgmedidas']['comida']),float(data['avgmedidas']['temperatura']),float(data['avgmedidas']['humedad']),float(data['avgmedidas']['presion']),float(data['avgmedidas']['gas'])] 
+               })
               
-      # elif(check == True):
-      #       coords = geo.GeoPoint(float(payload[1]),float(payload[2]))
-      #       doc_ref.set({
-      #           u'fecha_hora': payload[0],
-      #           u'ubicacion': coords, #futuro
-      #           u'nombre_corral': payload[3],
-      #           u'medidas': [float(payload[4]),float(payload[5]),float(payload[6]),float(payload[7]),float(payload[8]),float(payload[9])], 
-      #           u'promedio': [0,0,0,0,0,0]
-      #       })
+      elif(check == True):
+             coords = geo.GeoPoint(float(data['ubicacion']['lat']),float(data['ubicacion']['long']))
+             doc_ref.set({
+                   u'fecha_hora': data['hora'],
+                   u'ubicacion': coords, #futuro
+                   u'nombre_corral': data['Corral'],
+                   u'medidas': [float(data['medidas']['agua']),float(data['medidas']['comida']),float(data['medidas']['temperatura']),float(data['medidas']['humedad']),float(data['medidas']['presion']),float(data['medidas']['gas'])],
+                   u'promedio': [float(data['avgmedidas']['agua']),float(data['avgmedidas']['comida']),float(data['avgmedidas']['temperatura']),float(data['avgmedidas']['humedad']),float(data['avgmedidas']['presion']),float(data['avgmedidas']['gas'])] 
+             })  
       
           
 
