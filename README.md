@@ -22,9 +22,15 @@ Design and implementation of a poultry farm monitoring system capable of obtaini
 * Flutter 
 ## Resources:
 ##### 
-##### Config Files
-* [Click Here](./configs)
-##### Network Topology
-* [Network Topology](./images/Lora Avicultura.jpeg)
+##### Topology
+>![Topology](./img/diagrama.jpg) 
+##### Prototype
+>![Node](./img/insidenode.jpg) 
+>![Node](./img/outsidenode.jpg) 
+##### Tests
+>![Santiago](./img/pollitos.jpg)
+>![WebApp](./img/vr.jpg)
+>![WebApp](./img/vg.jpg)
+>![WebApp](./img/map.jpg)
 
 
