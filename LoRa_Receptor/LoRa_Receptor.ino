@@ -1,20 +1,20 @@
 //Librerias
 #include "heltec.h"
-#include <WiFi.h>
-#include "src/dependencies/WiFiClientSecure/WiFiClientSecure.h"
-#include <time.h>
-#include <PubSubClient.h>
+#include "WiFi.h"
+#include <WiFiClientSecure.h>
+#include "time.h"
+#include <MQTTClient.h>
 #include "secrets.h"
+#include <ArduinoJson.h>
 //Librerias
 
-//MQTT INFO
-const char MQTT_PUB_TOPIC[] = "nodos/"HOSTNAME"/medidas";
-//MQTT INFO
+//Documento Json
+StaticJsonDocument<410> payload;
+//Documento Json
 
 //MQTT CONF
-WiFiClientSecure net;
-PubSubClient client(net);
-time_t now;
+WiFiClientSecure net = WiFiClientSecure();
+MQTTClient mqttClient = MQTTClient(410);
 //MQTT CONF
 
 //Informacion necesaria para el  receptor/demodulador
@@ -28,19 +28,40 @@ time_t now;
 String packet,snr,rssi ;
 String packSize = "--";
 
-void LoRaData(){
-  Heltec.display->clear();
-  Heltec.display->setTextAlignment(TEXT_ALIGN_LEFT);
-  Heltec.display->setFont(ArialMT_Plain_10);
-  Heltec.display->drawString(0 , 0, "Rx:");
-  Heltec.display->drawString(15 , 0, packet);
-  Heltec.display->drawString(0 , 10, snr);
-  Heltec.display->drawString(0 , 20, rssi);  
-  Heltec.display->display();
-  Heltec.display->clear();
-}
+//mqtt handlers
+void messageHandler(String &topic, String &payload) {
+  Serial.println("incoming: " + topic + " - " + payload);
 
-//Conectar a aws
+//  StaticJsonDocument<200> doc;
+//  deserializeJson(doc, payload);
+//  const char* message = doc["message"];
+}
+//mqtt handlers
+
+void cbk(int packetSize) {
+  packet ="";
+  packSize = String(packetSize,DEC);
+  //Serial.print("Tamaño del paquete");
+  //Serial.println(packSize);
+  for (int i = 0; i < packetSize; i++) { packet += (char) LoRa.read();}
+  //Serial.print("Byte decodificado:");Serial.println(packet);}
+  //Figuras de Merito
+  snr="SNR:"+String(LoRa.packetSnr(),DEC);
+  rssi="RSSI:"+String(LoRa.packetRssi(),DEC);
+ // LoRaData();
+  
+  //Envio de data al broker
+  deserializeJson(payload, packet);
+  payload["Corral"]="Corral Wvaldo";
+  String timedate = printLocalTime();
+  timedate.replace("\n", "");
+  payload["hora"]=timedate;
+  //serializeJsonPretty(payload,Serial);
+  char packet[410];
+  serializeJson(payload, packet);
+  mqttClient.publish(MQTT_PUB_TOPIC,packet);
+  //Envio de data al broker
+}
 
 //obterner la hora
 String printLocalTime()
@@ -57,59 +78,46 @@ String printLocalTime()
 }
 //obtener la hora
 
-void cbk(int packetSize) {
-  packet ="";
-  packSize = String(packetSize,DEC);
-  //Serial.print("Tamaño del paquete");
-  //Serial.println(packSize);
-  for (int i = 0; i < packetSize; i++) { packet += (char) LoRa.read();}
-  //Serial.print("Byte decodificado:");Serial.println(packet);}
-  //Figuras de Merito
-  Serial.println(packet);
-  snr="SNR:"+String(LoRa.packetSnr(),DEC);
-  rssi="RSSI:"+String(LoRa.packetRssi(),DEC);
- // LoRaData();
-  
-  //Envio de data al broker
-  String timedate = printLocalTime();
-  //String timedate =ctime(&now);
-  timedate.replace("\n", "");
-  packet = timedate + ","+ packet; 
-  int trama_len = packet.length() + 1;
-  char trama_buff[trama_len];
-  packet.toCharArray(trama_buff,trama_len);
-  bool chk = client.publish(MQTT_PUB_TOPIC,trama_buff,false);
-  //Envio de data al broker
-}
+void connect_jiclora(){
+  //MQTT INCIALIZACIONES 
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
 
-//MQTT FUNCIONES
+  Serial.println("Connecting to Wi-Fi");
+  digitalWrite(LED,HIGH);
 
-void mqtt_connect(){
-    while (!client.connected()) {
-    Serial.print("Time:");
-    Serial.print(ctime(&now));
-    Serial.print("MQTT connecting");
-    if (client.connect(HOSTNAME, MQTT_USER, MQTT_PASS)) {
-      digitalWrite(LED,LOW);
-      Serial.println("connected");
-      //client.subscribe(MQTT_SUB_TOPIC);
-    } else {
-      Serial.print("failed, status code =");
-      Serial.print(client.state());
-      Serial.println("try again in 5 seconds");
-      /* Wait 5 seconds before retrying */
-      delay(5000);}}}
-
-void receivedCallback(char* topic, byte* payload, unsigned int length) {
-  Serial.print("Received [");
-  Serial.print(topic);
-  Serial.print("]: ");
-  for (int i = 0; i < length; i++) {
-    Serial.print((char)payload[i]);
+  while (WiFi.status() != WL_CONNECTED){
+    delay(500);
+    Serial.print(".");
   }
-}
+  Serial.println("WIFI Connected");
 
-//MQTT FUNCIONES
+  net.setCACert(lets_encrypt_Ca);
+  //net.setCertificate(lets_encrypt_CRT);
+  //net.setPrivateKey(lets_encrypt_PRIVATE);
+  
+  mqttClient.begin(MQTT_HOST, MQTT_PORT, net);
+  mqttClient.onMessage(messageHandler);
+
+  Serial.println("CONECTANDO A JICLORA BROKER");
+
+  while (!mqttClient.connect(HOSTNAME,MQTT_USER,MQTT_PASS)) {
+    Serial.print(".");
+    delay(100);
+  }
+
+   if(!mqttClient.connected()){
+    Serial.println("JICLORA BROKER TIEMPO DE ESPERA EXCEDIDO!");
+    return;
+  }
+
+  mqttClient.subscribe(MQTT_SUB_TOPIC);
+
+  Serial.println("CONECTADO A JICLORA BROKER!");
+  digitalWrite(LED,LOW);
+  
+  //MQTT INCIALIZACIONES 
+  }
 
 void setup() { 
   pinMode(LED,OUTPUT);
@@ -120,68 +128,20 @@ void setup() {
   Heltec.display->setFont(ArialMT_Plain_10);
   //LoRa.onReceive(cbk);
   LoRa.receive();
-  
-  //MQTT INCIALIZACIONES BLA BLA
-  Serial.print("Attempting to connect to SSID: ");
-  Serial.println(ssid);
-  WiFi.setHostname(HOSTNAME);
-  WiFi.mode(WIFI_AP_STA);
-  WiFi.begin(ssid, pass);
-  while (WiFi.status() != WL_CONNECTED)
-  {
-    digitalWrite(LED,HIGH);
-    Serial.print(".");
-    delay(1000);
-  }
- 
-  Serial.println();
-  Serial.print("Connected to ");
-  Serial.println(ssid);
-
-  Serial.print("Setting time using SNTP");
+  connect_jiclora();
+  Serial.print("Setting time using SNTP: ");
   configTime(-5 * 3600, 0, "pool.ntp.org");
-  now = time(nullptr);
-  while (now < 1510592825) {
-    delay(500);
-    Serial.print(".");
-    now = time(nullptr);
-  }
-  Serial.println("");
-  struct tm timeinfo;
-  gmtime_r(&now, &timeinfo);
-  Serial.print("Current time: ");
-  Serial.print(asctime(&timeinfo));
-
-  net.setCACert(local_root_ca);
-  client.setServer(MQTT_HOST, MQTT_PORT);
-  client.setCallback(receivedCallback);
-  mqtt_connect();
-  //MQTT INCIALIZACIONES BLA BLA
-  
+  Serial.println(printLocalTime());
   }
 
 void loop() {
-  //INICIALIZACION WIFI, MQTT BLA BLA
-     now = time(nullptr);
-  if (WiFi.status() != WL_CONNECTED){
-    Serial.print("Checking wifi");
-    while (WiFi.waitForConnectResult() != WL_CONNECTED){
-      WiFi.begin(ssid, pass);
-      Serial.print(".");
-      delay(10);}
-    Serial.println("connected");}
-  else{
-    if (!client.connected()){
-      mqtt_connect();}
-    else{
-      client.loop();
-    }}
-  //INICIALIZACION WIFI, MQTT BLA BLA
+  
   //Recepcion de data
   int packetSize = LoRa.parsePacket();
   if (packetSize){
     cbk(packetSize);
     //delay(10);  
     }
-   //Recepcion de data 
+   //Recepcion de data
+   mqttClient.loop(); 
     }

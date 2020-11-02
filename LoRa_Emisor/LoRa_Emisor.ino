@@ -1,4 +1,5 @@
 //Librerias
+#include <ArduinoJson.h>
 #include "heltec.h" //Esta Libreria llama a la de Lora.h
 #include <Wire.h>
 #include <SPI.h>
@@ -6,19 +7,20 @@
 #include "Adafruit_BME680.h"
 //Librerias
 
-//GPS UBICACION
-double latitude = 9.045448;
-double longitude = -79.406670;
-//GPS UBICACION
+StaticJsonDocument<400> payload;
+JsonObject ubicacion = payload.createNestedObject("ubicacion");
+JsonObject medidas = payload.createNestedObject("medidas");
+JsonObject avgmedidas = payload.createNestedObject("avgmedidas");
 
 //NOMBRE DEL CORRAL
-String nombre_corral = "Casa D40";
+String nombre_corral = "Corral Wvaldo";
 //NOMBRE DEL CORRAL
 
 //programador de obtencion de data
 const long interval = 60000;
 unsigned long prev;
 //programador de obtencion de data
+
 //BME680
 Adafruit_BME680 bme; // I2C
 //BME680
@@ -214,9 +216,26 @@ timer = timerBegin(0, 240, true);
 timerAttachInterrupt(timer, &shot_pulse, CHANGE);
 timerAlarmWrite(timer, TRIG_US, true);
 timerAlarmEnable(timer);
-//interrupciones y timer  
+//interrupciones y timer
 
-
+//JSON INFORMACION BASICA DEL NODO
+payload["Corral"] = nombre_corral;
+payload["fechaHora"] = "null";
+ubicacion["lat"]=9.045448;
+ubicacion["long"]=-79.406670;
+medidas["comida"]=0;
+medidas["agua"]=0;
+medidas["temperatura"]=0;
+medidas["humedad"]=0;
+medidas["presion"]=0;
+medidas["gas"]=0;
+avgmedidas["comida"]=0;
+avgmedidas["agua"]=0;
+avgmedidas["temperatura"]=0;
+avgmedidas["humedad"]=0;
+avgmedidas["presion"]=0;
+avgmedidas["gas"]=0;
+//JSON
 }
 
 
@@ -232,8 +251,10 @@ void loop() {
     else{
       
     Serial.println("Reading Performed Correctly");
-    int dist1 = echo_duration1/58;
-    int dist2 = echo_duration2/58;
+    int dist1=echo_duration1/58;
+    int dist2=echo_duration2/58;
+    float v1 = ((abs(22-dist1))*10.7*13.2)/1000; //volumen de un cuboid
+    float v2 = ((((abs(21-dist2))*10.7*13.2)/1000)/2.12)*100;
     float tempe = bme.temperature;
     float presion = (bme.pressure/100)/1000;
     unsigned long gasresis = bme.gas_resistance;
@@ -245,8 +266,8 @@ void loop() {
       //dummy first cycle to discard first values
       count++;
     } else if (count<1441) {
-      dist1sum = dist1+dist1sum; avedist1 = dist1sum/(count-1);
-      dist2sum = dist2+dist2sum; avedist2 = dist2sum/(count-1);
+      dist1sum = v1+dist1sum; avedist1 = dist1sum/(count-1);
+      dist2sum = v2+dist2sum; avedist2 = dist2sum/(count-1);
       tempsum = tempe+tempsum; avetemp = tempsum/(count-1);
       humisum = humi+humisum; avehumi = humisum/(count-1);
       pressum = presion+pressum; avepress = pressum/(count-1);
@@ -259,18 +280,28 @@ void loop() {
       }
     } else {
       count = 1;
-      String aveframe = String(avedist1)+","+String(avedist2)+","+String(avetemp)+","+String(avehumi)+","+String(avepress)+","+ String(avecompgas);
-      LoRa.beginPacket();
-      LoRa.print(aveframe);
-      LoRa.endPacket();
-      Serial.println("Daily average measurement sent correctly!");
+      avgmedidas["agua"]=avedist1;
+      avgmedidas["comida"]=avedist2;
+      avgmedidas["temperatura"]=avetemp;
+      avgmedidas["humedad"]=avehumi;
+      avgmedidas["presion"]=avepress;
+      avgmedidas["gas"]=avecompgas;
+      Serial.println("Daily average measurement set correctly!");
       dist1sum, dist2sum, tempsum, humisum, pressum, gassum = 0;
     }
     
-    String frame = String(latitude,6)+ "," +String(longitude,6)+ "," +nombre_corral+ "," + String(dist1) + "," + String(dist2) + "," +String(tempe)+ "," +String(humi)+ "," +String(presion)+ "," +String(compgas);
-    //Serial.println(frame);
+    medidas["agua"]=v1;
+    medidas["comida"]=v2;
+    medidas["temperatura"]=tempe;
+    medidas["humedad"]=humi;
+    medidas["presion"]=presion;
+    medidas["gas"]=compgas;
+    //serializeJsonPretty(payload, Serial);
+    char packet[400];
+    serializeJson(payload, packet);
+    //Serial.println(packet);
     LoRa.beginPacket();
-    LoRa.print(frame);
+    LoRa.print(packet);
     LoRa.endPacket();
     }
     }
