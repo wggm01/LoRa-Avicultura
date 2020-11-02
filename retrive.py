@@ -46,8 +46,22 @@ def on_message(client,userdata,message):
             u'fecha_hora': data['hora'],
             u'ubicacion': coords, #futuro
             u'nombre_corral': data['Corral'],
-            u'medidas': [float(data['medidas']['agua']),float(data['medidas']['comida']),float(data['medidas']['temperatura']),float(data['medidas']['humedad']),float(data['medidas']['presion']),float(data['medidas']['gas'])],
-            u'promedio': [float(data['avgmedidas']['agua']),float(data['avgmedidas']['comida']),float(data['avgmedidas']['temperatura']),float(data['avgmedidas']['humedad']),float(data['avgmedidas']['presion']),float(data['avgmedidas']['gas'])] 
+            u'medidas':[
+            round(data['medidas']['agua'],2),
+            round(data['medidas']['comida'],2),
+            round(data['medidas']['temperatura'],2),
+            round(data['medidas']['humedad'],2),
+            round(data['medidas']['presion'],2),
+            round(data['medidas']['gas'],2)
+            ],
+            u'promedio':[
+            round(data['avgmedidas']['agua'],2),
+            round(data['avgmedidas']['comida'],2),
+            round(data['avgmedidas']['temperatura'],2),
+            round(data['avgmedidas']['humedad'],2),
+            round(data['avgmedidas']['presion'],1),
+            round(data['avgmedidas']['gas'],2)
+            ] 
             })
               
       elif(check==True):
@@ -57,8 +71,22 @@ def on_message(client,userdata,message):
             u'fecha_hora': data['hora'],
             u'ubicacion': coords, #futuro
             u'nombre_corral': data['Corral'],
-            u'medidas': [float(data['medidas']['agua']),float(data['medidas']['comida']),float(data['medidas']['temperatura']),float(data['medidas']['humedad']),float(data['medidas']['presion']),float(data['medidas']['gas'])],
-            u'promedio': [float(data['avgmedidas']['agua']),float(data['avgmedidas']['comida']),float(data['avgmedidas']['temperatura']),float(data['avgmedidas']['humedad']),float(data['avgmedidas']['presion']),float(data['avgmedidas']['gas'])] 
+            u'medidas':[
+            round(data['medidas']['agua'],2),
+            round(data['medidas']['comida'],2),
+            round(data['medidas']['temperatura'],2),
+            round(data['medidas']['humedad'],2),
+            round(data['medidas']['presion'],2),
+            round(data['medidas']['gas'],2)
+            ],
+            u'promedio':[
+            round(data['avgmedidas']['agua'],2),
+            round(data['avgmedidas']['comida'],2),
+            round(data['avgmedidas']['temperatura'],2),
+            round(data['avgmedidas']['humedad'],2),
+            round(data['avgmedidas']['presion'],1),
+            round(data['avgmedidas']['gas'],2)
+            ]  
             })  
       
           
