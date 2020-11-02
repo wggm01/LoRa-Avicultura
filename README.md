@@ -23,14 +23,10 @@ Design and implementation of a poultry farm monitoring system capable of obtaini
 ## Resources:
 ##### 
 ##### Topology
-<img align="left" width="400" height="400"  src ="./img/diagrama.jpg"> 
+
 ##### Prototype
-<img align="left" width="400" height="400" src "./img/insidenode.jpeg">
-<img align="left" width="400" height="400" src "./img/outsidenode.jpeg">
+
 ##### Tests
-<img align="left" width="400" height="400" src "./img/pollitos.jpg">
-<img align="left" width="400" height="400" src "./img/vr.jpg">
-<img align="left" width="400" height="400" src "./img/vg.jpg">
-<img align="left" width="400" height="400" src "./img/map.jpg">
+
 
 
