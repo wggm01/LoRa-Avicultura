@@ -35,7 +35,7 @@ def on_message(client,userdata,message):
       provincia = re.findall("/([a-zA-Z]+)/",provincia) #obtener provincia
      # print(provincia[0])
       if('medidas' in data):
-        print(data['Corral'],check,data['hora'],type(data['medidas']['agua']))
+        print(data['Corral'],check,data['hora'],type(data['medidas']['agua']),str(provincia[0]))
       
       # doc_ref = db.collection(u'nodos').document(str(provincia[0])) #referencia a la coleccion
 
