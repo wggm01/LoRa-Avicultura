@@ -11,7 +11,7 @@ from firebase_admin import firestore
 from google.cloud import firestore as geo
 check = None 
 capath = r'/etc/ssl/certs/DST_Root_CA_X3.pem' #certificado root ssl
-json_file = r'/home/pi/gkey/avicultura.json' #private key
+json_file = r'/home/pi/gkey/avicultura-lora.json' #private key
 #credenciales de firebase
 cred = credentials.Certificate(json_file)
 firebase_admin.initialize_app(cred)
