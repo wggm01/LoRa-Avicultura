@@ -265,7 +265,7 @@ void loop() {
     if (count ==1){
       //dummy first cycle to discard first values
       count++;
-    } else if (count<1441) {
+    } else if (count<601) {
       dist1sum = v1+dist1sum; avedist1 = dist1sum/(count-1);
       dist2sum = v2+dist2sum; avedist2 = dist2sum/(count-1);
       tempsum = tempe+tempsum; avetemp = tempsum/(count-1);
